@@ -43,7 +43,7 @@ app.get("/api/:date", (req, res) => {
     res.json({"error": "Invalid Date"})
   }
 
-  res.json({"unix": dateObj.getTime(), "utc": convertDay(dateObj.getDay()) + ", " + dateObj.getDate() + " " + convertMonth(dateObj.getMonth()) + " " + dateObj.getFullYear() + " " + dateObj.getUTCHours().toString().padStart(2, '0') + ":" + dateObj.getMinutes().toString().padStart(2, '0') + ":" + dateObj.getSeconds().toString().padStart(2, '0') + " GMT"});
+  res.json({"unix": dateObj.getTime(), "utc": convertDay(dateObj.getUTCDay()) + ", " + dateObj.getUTCDate() + " " + convertMonth(dateObj.getUTCMonth()) + " " + dateObj.getUTCFullYear() + " " + dateObj.getUTCHours().toString().padStart(2, '0') + ":" + dateObj.getUTCMinutes().toString().padStart(2, '0') + ":" + dateObj.getUTCSeconds().toString().padStart(2, '0') + " GMT"});
 
 });
 function convertDay(day){
