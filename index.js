@@ -39,9 +39,13 @@ app.get("/api/:date", (req, res) => {
   date = date.replace(/,/g, "-");
   let dateObj;
   if(+date) dateObj = new Date(+date);
-  else if(isNaN(new Date(date).getTime())) res.json({"error": "Invalid Date"});
   else dateObj = new Date(date);
-  sendJson(res, dateObj);
+  if(isNaN(new Date(date).getTime())) {
+    res.json({ "error" : "Invalid Date" });
+  }
+  else{
+    sendJson(res, dateObj);
+  }
 });
 function sendJson(res, date){
   res.json({"unix": date.getTime(), "utc": convertDay(date.getDay()) + ", " + date.getDate().toString().padStart(2,'0') + " " + convertMonth(date.getMonth()) + " " + date.getFullYear() + " " + date.getUTCHours().toString().padStart(2, '0') + ":" + date.getUTCMinutes().toString().padStart(2, '0') + ":" + date.getUTCSeconds().toString().padStart(2, '0') + " GMT"});
