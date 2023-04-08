@@ -35,16 +35,17 @@ app.get("/api", (req, res) => {
   res.json({"unix": date.getTime(), "utc": convertDay(date.getDay()) + ", " + date.getDate() + " " + convertMonth(date.getMonth()) + " " + date.getFullYear() + " " + date.getUTCHours().toString().padStart(2, '0') + ":" + date.getMinutes().toString().padStart(2, '0') + ":" + date.getSeconds().toString().padStart(2, '0') + " GMT"});
 })
 app.get("/api/:date", (req, res) => {
-  const { date } = req.params;
+  let { date } = req.params;
+  date = date.replaceAll(",", "-");
   let dateObj;
-  if(date.includes("-") || date.includes(",")) dateObj = new Date(date);
+
+  if(date.includes("-")) dateObj = new Date(date);
   else dateObj = new Date(+date);
   if(isNaN(dateObj.getTime())){
-    res.json({"error": "Invalid Date"})
+    res.json({"error": "Invalid Date"});
   }
 
-
-  res.json({"unix": dateObj.getTime(), "utc": convertDay(dateObj.getDay()) + ", " + dateObj.getDate() + " " + convertMonth(dateObj.getUTCMonth()) + " " + dateObj.getFullYear() + " " + dateObj.getHours().toString().padStart(2, '0') + ":" + dateObj.getMinutes().toString().padStart(2, '0') + ":" + dateObj.getSeconds().toString().padStart(2, '0') + " GMT"});
+  res.json({"unix": dateObj.getTime(), "utc": convertDay(dateObj.getDay()) + ", " + dateObj.getDate().toString().padStart(2, '0') + " " + convertMonth(dateObj.getMonth()) + " " + dateObj.getFullYear() + " " + dateObj.getUTCHours().toString().padStart(2, '0') + ":" + dateObj.getMinutes().toString().padStart(2, '0') + ":" + dateObj.getSeconds().toString().padStart(2, '0') + " GMT"});
 
 });
 function convertDay(day){
