@@ -32,22 +32,20 @@ const listener = app.listen(process.env.PORT, function () {
 });
 app.get("/api", (req, res) => {
   const date = new Date(Date.now());
-  res.json({"unix": date.getTime(), "utc": convertDay(date.getDay()) + ", " + date.getDate() + " " + convertMonth(date.getMonth()) + " " + date.getFullYear() + " " + date.getUTCHours().toString().padStart(2, '0') + ":" + date.getMinutes().toString().padStart(2, '0') + ":" + date.getSeconds().toString().padStart(2, '0') + " GMT"});
+  sendJson(res, date);
 })
 app.get("/api/:date", (req, res) => {
   let { date } = req.params;
-  date = date.replaceAll(",", "-");
+  date = date.replaceAll(",", "-")
   let dateObj;
-
-  if(date.includes("-")) dateObj = new Date(date);
-  else dateObj = new Date(+date);
-  if(isNaN(dateObj.getTime())){
-    res.json({"error": "Invalid Date"});
-  }
-
-  res.json({"unix": dateObj.getTime(), "utc": convertDay(dateObj.getDay()) + ", " + dateObj.getDate().toString().padStart(2, '0') + " " + convertMonth(dateObj.getMonth()) + " " + dateObj.getFullYear() + " " + dateObj.getUTCHours().toString().padStart(2, '0') + ":" + dateObj.getMinutes().toString().padStart(2, '0') + ":" + dateObj.getSeconds().toString().padStart(2, '0') + " GMT"});
-
+  if(+date) dateObj = new Date(+date);
+  else if(isNaN(new Date(date).getTime())) res.json({"error": "Invalid Date"});
+  else dateObj = new Date(date);
+  sendJson(res, dateObj);
 });
+function sendJson(res, date){
+  res.json({"unix": date.getTime(), "utc": convertDay(date.getDay()) + ", " + date.getDate().toString().padStart(2,'0') + " " + convertMonth(date.getMonth()) + " " + date.getFullYear() + " " + date.getUTCHours().toString().padStart(2, '0') + ":" + date.getUTCMinutes().toString().padStart(2, '0') + ":" + date.getUTCSeconds().toString().padStart(2, '0') + " GMT"});
+}
 function convertDay(day){
   if(day === 1) return "Mon";
   if(day === 2) return "Tue";
