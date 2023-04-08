@@ -36,7 +36,7 @@ app.get("/api", (req, res) => {
 })
 app.get("/api/:date", (req, res) => {
   let { date } = req.params;
-  date = date.replaceAll(",", "-")
+  date = date.replace(/,/g, "-");
   let dateObj;
   if(+date) dateObj = new Date(+date);
   else if(isNaN(new Date(date).getTime())) res.json({"error": "Invalid Date"});
